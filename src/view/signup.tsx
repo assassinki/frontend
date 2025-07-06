@@ -32,7 +32,7 @@ const signup = () => {
   const handleSignup = async (event: any) => {
     event.preventDefault();
     if (!username || !password) {
-      setError("Enter the username or password");
+      setError("Enter the username or password correctly!");
       return;
     }
     setError("");
