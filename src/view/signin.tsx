@@ -40,7 +40,7 @@ const Signin = () => {
     setError("");
 
     try {
-      const res = await axios.post("/", {
+      const res = await axios.post("http://localhost:4000/auth/login", {
         username,
         password,
       });

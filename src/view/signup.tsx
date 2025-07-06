@@ -37,7 +37,7 @@ const SignUp = () => {
     }
     setError("");
     try {
-      const response = await axios.post("locahost:4000/auth/SignUp", {
+      const response = await axios.post("http://localhost:4000/auth/signup", {
         username,
         password,
       });
@@ -65,6 +65,8 @@ const SignUp = () => {
             placeholder="Enter Your Username"
             fullWidth
             required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             id="standard-basic"
@@ -74,6 +76,8 @@ const SignUp = () => {
             type="password"
             fullWidth
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             id="standard-basic"
