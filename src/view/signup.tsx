@@ -65,6 +65,8 @@ const signup = () => {
             placeholder="Enter Your Username"
             fullWidth
             required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             id="standard-basic"
@@ -74,14 +76,8 @@ const signup = () => {
             type="password"
             fullWidth
             required
-          />
-          <TextField
-            id="standard-basic"
-            label="Email"
-            variant="standard"
-            placeholder="Enter Your Email"
-            fullWidth
-            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
 
           <Button
