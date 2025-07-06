@@ -25,34 +25,33 @@ const signup = () => {
     height: 70,
   };
 
-  // const [username, setUsername] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [error, setError] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  // const handleSignup = async (event: any) => {
-  //   event.preventDefault();
-  //   if (!username || !password) {
-  //     setError("Enter the username or password");
-  //     return;
-  //   }
-  //   setError("");
-  //   try {
-  //     const response = await axios.post("locahost:4000/auth/signup", {
-  //       username,
-  //       password,
-  //     });
-  //     console.log("sign up successful", response.data);
-  //   } catch (err) {
-  //     console.error("Sign up error!", err);
-  //     setError("Signup failed. Please try again.");
-  //   }
-  // };
+  const handleSignup = async (event: any) => {
+    event.preventDefault();
+    if (!username || !password) {
+      setError("Enter the username or password");
+      return;
+    }
+    setError("");
+    try {
+      const response = await axios.post("locahost:4000/auth/signup", {
+        username,
+        password,
+      });
+      console.log("sign up successful", response.data);
+    } catch (err) {
+      console.error("Sign up error!", err);
+      setError("Signup failed. Please try again.");
+    }
+  };
 
   return (
     <Grid>
       <Paper elevation={12} style={paperStyle}>
-        <form>
-          {/* <form onSubmit={handleSignup}> */}
+        <form onSubmit={handleSignup}>
           <Grid container justifyContent="center" alignItems="center">
             <Avatar style={avatarStyle}>
               <LockOutlinedIcon style={{ color: "#002A57" }} />
