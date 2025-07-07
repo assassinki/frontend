@@ -28,12 +28,13 @@ const Signin = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!username || !password || !email) {
       setError("Fill the field");
       return;
     }
@@ -43,7 +44,9 @@ const Signin = () => {
       const res = await axios.post("http://localhost:4000/auth/login", {
         username,
         password,
+        email,
       });
+      localStorage.setItem("token", res.data.token);
       console.log("Login successful", res.data);
     } catch (err) {
       console.log("Login error!");
@@ -81,6 +84,16 @@ const Signin = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+          <TextField
+            id="standard-basic"
+            label="Email"
+            variant="standard"
+            placeholder="Enter Your Email address"
+            fullWidth
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <Button
