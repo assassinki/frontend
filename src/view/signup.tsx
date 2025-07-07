@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 
-const signup = () => {
+const SignUp = () => {
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -29,7 +29,7 @@ const signup = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSignup = async (event: any) => {
+  const handleSignUp = async (event: any) => {
     event.preventDefault();
     if (!username || !password) {
       setError("Enter the username or password correctly!");
@@ -37,21 +37,21 @@ const signup = () => {
     }
     setError("");
     try {
-      const response = await axios.post("locahost:4000/auth/signup", {
+      const response = await axios.post("http://localhost:4000/auth/signup", {
         username,
         password,
       });
       console.log("sign up successful", response.data);
     } catch (err) {
       console.error("Sign up error!", err);
-      setError("Signup failed. Please try again.");
+      setError("SignUp failed. Please try again.");
     }
   };
 
   return (
     <Grid>
       <Paper elevation={12} style={paperStyle}>
-        <form onSubmit={handleSignup}>
+        <form onSubmit={handleSignUp}>
           <Grid container justifyContent="center" alignItems="center">
             <Avatar style={avatarStyle}>
               <LockOutlinedIcon style={{ color: "#002A57" }} />
@@ -65,6 +65,8 @@ const signup = () => {
             placeholder="Enter Your Username"
             fullWidth
             required
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             id="standard-basic"
@@ -74,6 +76,8 @@ const signup = () => {
             type="password"
             fullWidth
             required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             id="standard-basic"
@@ -93,10 +97,13 @@ const signup = () => {
           >
             Sign up
           </Button>
+          <Typography>
+            <Link href="/">Login Here.</Link>
+          </Typography>
         </form>
       </Paper>
     </Grid>
   );
 };
 
-export default signup;
+export default SignUp;
