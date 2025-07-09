@@ -5,6 +5,8 @@ import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Signin from "./signin";
 
 const SignUp = () => {
   const paperStyle = {
@@ -29,6 +31,8 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
   const isEmailValid = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isPasswordStrong = (password: string) => password.length >= 8;
@@ -55,6 +59,10 @@ const SignUp = () => {
         password,
         email,
       });
+      if (response.status === 200) {
+        navigate("/");
+        alert("Sign up successful");
+      }
       console.log("sign up successful", response.data);
     } catch (err) {
       console.error("Sign up error!", err);

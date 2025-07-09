@@ -6,6 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const paperStyle = {
@@ -28,13 +29,13 @@ const Signin = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
-    if (!username || !password || !email) {
+    if (!username || !password) {
       setError("Fill the field");
       return;
     }
@@ -44,10 +45,11 @@ const Signin = () => {
       const res = await axios.post("http://localhost:4000/auth/login", {
         username,
         password,
-        email,
       });
       localStorage.setItem("token", res.data.token);
-      console.log("Login successful", res.data);
+      if (res.status === 200) {
+        navigate("/home");
+      }
     } catch (err) {
       console.log("Login error!");
       setError("Login failed. Please try again");
@@ -84,16 +86,6 @@ const Signin = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-          />
-          <TextField
-            id="standard-basic"
-            label="Email"
-            variant="standard"
-            placeholder="Enter Your Email address"
-            fullWidth
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
           />
 
           <Button
