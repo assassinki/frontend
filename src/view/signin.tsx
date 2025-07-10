@@ -48,6 +48,7 @@ const Signin = () => {
       });
       localStorage.setItem("token", res.data.token);
       if (res.status === 200) {
+        localStorage.setItem("token", res.data.token);
         navigate("/home");
       }
     } catch (err) {
