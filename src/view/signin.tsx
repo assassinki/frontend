@@ -6,6 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const paperStyle = {
@@ -29,6 +30,7 @@ const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -44,7 +46,10 @@ const Signin = () => {
         username,
         password,
       });
-      console.log("Login successful", res.data);
+      localStorage.setItem("token", res.data.token);
+      if (res.status === 200) {
+        navigate("/home");
+      }
     } catch (err) {
       console.log("Login error!");
       setError("Login failed. Please try again");

@@ -5,6 +5,8 @@ import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import Signin from "./signin";
 
 const SignUp = () => {
   const paperStyle = {
@@ -27,12 +29,27 @@ const SignUp = () => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const isEmailValid = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isPasswordStrong = (password: string) => password.length >= 8;
 
   const handleSignUp = async (event: any) => {
     event.preventDefault();
-    if (!username || !password) {
-      setError("Enter the username or password correctly!");
+
+    if (!isEmailValid(email)) {
+      setError("Invalid email address");
+      return;
+    }
+    if (!isPasswordStrong(password)) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+    if (!username || !password || !email) {
+      setError("Enter the username, password or email correctly!");
       return;
     }
     setError("");
@@ -40,7 +57,12 @@ const SignUp = () => {
       const response = await axios.post("http://localhost:4000/auth/signup", {
         username,
         password,
+        email,
       });
+      if (response.status === 200) {
+        navigate("/");
+        alert("Sign up successful");
+      }
       console.log("sign up successful", response.data);
     } catch (err) {
       console.error("Sign up error!", err);
@@ -86,6 +108,8 @@ const SignUp = () => {
             placeholder="Enter Your Email"
             fullWidth
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <Button
@@ -100,6 +124,9 @@ const SignUp = () => {
           <Typography>
             <Link href="/">Login Here.</Link>
           </Typography>
+          {error && (
+            <div style={{ color: "red", marginTop: "10px" }}>{error}</div>
+          )}
         </form>
       </Paper>
     </Grid>
