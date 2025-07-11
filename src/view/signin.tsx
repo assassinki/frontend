@@ -48,7 +48,8 @@ const Signin = () => {
       });
       localStorage.setItem("token", res.data.token);
       if (res.status === 200) {
-        navigate("/home");
+        localStorage.setItem("token", res.data.token);
+        navigate("/chat");
       }
     } catch (err) {
       console.log("Login error!");

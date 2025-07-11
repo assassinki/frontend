@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type Message = {
   role: "user" | "assistant";
@@ -26,6 +27,14 @@ const ChatDashboard: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [messages]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -39,15 +48,26 @@ const ChatDashboard: React.FC = () => {
       content: input,
       timestamp: new Date().toISOString(),
     };
+
     setMessages((prev) => [...prev, newMessages]);
     setInput("");
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:4000/auth/chat", {
-        role: "user",
-        content: input,
-        timestamp: new Date().toISOString(),
-      });
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        "http://localhost:4000/auth/chat",
+        {
+          role: "user",
+          content: input,
+          timestamp: new Date().toISOString(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const assistantMessage: Message = {
         role: "assistant",
         content: response.data.reply,

@@ -59,9 +59,8 @@ const SignUp = () => {
         password,
         email,
       });
-      if (response.status === 200) {
-        navigate("/");
-        alert("Sign up successful");
+      if (response.status === 201) {
+        navigate("/login");
       }
       console.log("sign up successful", response.data);
     } catch (err) {
@@ -122,7 +121,7 @@ const SignUp = () => {
             Sign up
           </Button>
           <Typography>
-            <Link href="/">Login Here.</Link>
+            <Link href="/login">Login Here.</Link>
           </Typography>
           {error && (
             <div style={{ color: "red", marginTop: "10px" }}>{error}</div>
