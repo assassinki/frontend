@@ -48,6 +48,7 @@ const ChatDashboard: React.FC = () => {
       content: input,
       timestamp: new Date().toISOString(),
     };
+
     setMessages((prev) => [...prev, newMessages]);
     setInput("");
     setLoading(true);
@@ -63,7 +64,7 @@ const ChatDashboard: React.FC = () => {
         },
         {
           headers: {
-            Authorization: "Bearer ${token}",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
