@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Signin from "./signin";
 
 const SignUp = () => {
   const paperStyle = {
@@ -27,10 +25,10 @@ const SignUp = () => {
     height: 70,
   };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   const isEmailValid = (email: string) =>
@@ -40,12 +38,13 @@ const SignUp = () => {
   const handleSignUp = async (event: any) => {
     event.preventDefault();
 
-    if (!isEmailValid(email)) {
-      setError("Invalid email address");
-      return;
-    }
     if (!isPasswordStrong(password)) {
       setError("Password must be at least 8 characters");
+      return;
+    }
+
+    if (!isEmailValid(email)) {
+      setError("Invalid email address");
       return;
     }
     if (!username || !password || !email) {

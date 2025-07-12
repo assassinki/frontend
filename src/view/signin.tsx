@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -20,16 +18,10 @@ const Signin = () => {
   };
   const avatarStyle = { backgroundColor: "#D9D9D9" };
   const btnstyle = { backgroundColor: "#1B6DA1", margin: "12px 0" };
-  const logoStyle = {
-    backgroundColor: "#D9D9D9",
-    margin: "10px 0",
-    width: 70,
-    height: 70,
-  };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   const handleLogin = async (e: any) => {
