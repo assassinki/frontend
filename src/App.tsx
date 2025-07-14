@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 
-import Chatting from "./componets/Chat";
+import Chatting from "./view/Chat";
 
 const App: React.FC = () => {
   return (

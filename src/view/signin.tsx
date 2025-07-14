@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState, FormEvent } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Signin = () => {
+const Signin: React.FC = () => {
+  const API_URL: string = process.env.REACT_APP_API_URL!;
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -20,19 +19,13 @@ const Signin = () => {
   };
   const avatarStyle = { backgroundColor: "#D9D9D9" };
   const btnstyle = { backgroundColor: "#1B6DA1", margin: "12px 0" };
-  const logoStyle = {
-    backgroundColor: "#D9D9D9",
-    margin: "10px 0",
-    width: 70,
-    height: 70,
-  };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!username || !password) {
@@ -42,17 +35,18 @@ const Signin = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:4000/auth/login", {
+      const res = await axios.post<{ token: string }>(`${API_URL}/auth/login`, {
         username,
         password,
       });
       localStorage.setItem("token", res.data.token);
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", username);
         navigate("/chat");
       }
     } catch (err) {
-      console.log("Login error!");
+      console.log("Login error!", err);
       setError("Login failed. Please try again");
     }
   };

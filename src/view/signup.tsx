@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState, FormEvent } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Signin from "./signin";
 
-const SignUp = () => {
+const SignUp: React.FC = () => {
+  const API_URL: string = process.env.REACT_APP_API_URL!;
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -27,25 +26,26 @@ const SignUp = () => {
     height: 70,
   };
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   const isEmailValid = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isPasswordStrong = (password: string) => password.length >= 8;
 
-  const handleSignUp = async (event: any) => {
+  const handleSignUp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if (!isPasswordStrong(password)) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
 
     if (!isEmailValid(email)) {
       setError("Invalid email address");
-      return;
-    }
-    if (!isPasswordStrong(password)) {
-      setError("Password must be at least 8 characters");
       return;
     }
     if (!username || !password || !email) {
@@ -54,7 +54,7 @@ const SignUp = () => {
     }
     setError("");
     try {
-      const response = await axios.post("http://localhost:4000/auth/signup", {
+      const response = await axios.post(`${API_URL}/auth/signup`, {
         username,
         password,
         email,
