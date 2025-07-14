@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const SignUp: React.FC = () => {
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -35,7 +35,7 @@ const SignUp = () => {
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isPasswordStrong = (password: string) => password.length >= 8;
 
-  const handleSignUp = async (event: any) => {
+  const handleSignUp = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (!isPasswordStrong(password)) {

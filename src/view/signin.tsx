@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import { Avatar, Button, Link, TextField, Typography } from "@mui/material";
@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Signin = () => {
+const Signin: React.FC = () => {
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -24,7 +24,7 @@ const Signin = () => {
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!username || !password) {
@@ -34,17 +34,21 @@ const Signin = () => {
     setError("");
 
     try {
-      const res = await axios.post("http://localhost:4000/auth/login", {
-        username,
-        password,
-      });
+      const res = await axios.post<{ token: string }>(
+        "http://localhost:4000/auth/login",
+        {
+          username,
+          password,
+        }
+      );
       localStorage.setItem("token", res.data.token);
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);
+        localStorage.setItem("username", username);
         navigate("/chat");
       }
     } catch (err) {
-      console.log("Login error!");
+      console.log("Login error!", err);
       setError("Login failed. Please try again");
     }
   };

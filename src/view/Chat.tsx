@@ -11,21 +11,33 @@ import {
   Stack,
   Divider,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 type Message = {
+  id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: string;
 };
 
+interface ChatHistoryResponse {
+  messages: Message[];
+}
+
+interface ChatReplyResponse {
+  reply: string;
+}
+
 const ChatDashboard: React.FC = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [username, setUsername] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
 
@@ -33,8 +45,23 @@ const ChatDashboard: React.FC = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/");
+    } else {
+      setUsername(localStorage.getItem("username"));
+
+      axios
+        .get<ChatHistoryResponse>("http://localhost:4000/auth/chat/history", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res: AxiosResponse<ChatHistoryResponse>) => {
+          setMessages(res.data.messages);
+        })
+        .catch((err) => {
+          console.error("Error fetching history:", err);
+        });
     }
-  }, [messages]);
+  }, [navigate]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -44,6 +71,7 @@ const ChatDashboard: React.FC = () => {
     if (!input.trim()) return;
 
     const newMessages: Message = {
+      id: uuidv4(),
       role: "user",
       content: input,
       timestamp: new Date().toISOString(),
@@ -55,12 +83,12 @@ const ChatDashboard: React.FC = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await axios.post(
+      const response = await axios.post<ChatReplyResponse>(
         "http://localhost:4000/auth/chat",
         {
           role: "user",
           content: input,
-          timestamp: new Date().toISOString(),
+          timestamp: newMessages.timestamp,
         },
         {
           headers: {
@@ -69,6 +97,7 @@ const ChatDashboard: React.FC = () => {
         }
       );
       const assistantMessage: Message = {
+        id: uuidv4(),
         role: "assistant",
         content: response.data.reply,
         timestamp: new Date().toISOString(),
@@ -78,6 +107,7 @@ const ChatDashboard: React.FC = () => {
       setMessages((prev) => [
         ...prev,
         {
+          id: uuidv4(),
           role: "assistant",
           content: "⚠️ Error: Unable to reach ChatGPT.",
           timestamp: new Date().toISOString(),
@@ -93,16 +123,28 @@ const ChatDashboard: React.FC = () => {
     return date.toLocaleDateString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("username");
+    navigate("/");
+  };
+
   return (
-    <Box display="flex" flexDirection="column" height="80vh" width="90%" p={2}>
+    <Box display="flex" flexDirection="column" height="80vh" width="99%" p={2}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Chat with ChatGPT
           </Typography>
-          <Link href="/" color="inherit" underline="none">
-            Logout
-          </Link>
+          <Typography>
+            <Button
+              color="inherit"
+              onClick={handleLogout}
+              sx={{ textTransform: "none" }}
+            >
+              Logout
+            </Button>
+          </Typography>
         </Toolbar>
       </AppBar>
       <Box
@@ -111,7 +153,7 @@ const ChatDashboard: React.FC = () => {
       >
         <Paper
           elevation={3}
-          sx={{ flex: 1, overflowY: "auto", p: 2, mb: 2, height: "80vh" }}
+          sx={{ flex: 1, overflowY: "auto", p: 2, mb: 2, height: "75vh" }}
         >
           <Stack spacing={2}>
             {messages.map((msg, idx) => (
@@ -159,7 +201,7 @@ const ChatDashboard: React.FC = () => {
             left: 5,
             display: "flex",
             alignItems: "center",
-            width: "80%",
+            width: "95%",
           }}
           className="container"
         >
