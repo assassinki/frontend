@@ -136,7 +136,12 @@ const ChatDashboard: React.FC = () => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Chat with ChatGPT
           </Typography>
-          <Typography>
+          <Box display="flex" alignItems="center" gap={2}>
+            {username && (
+              <Typography variant="body1" color="inherit">
+                Hello,{username}!
+              </Typography>
+            )}
             <Button
               color="inherit"
               onClick={handleLogout}
@@ -144,7 +149,7 @@ const ChatDashboard: React.FC = () => {
             >
               Logout
             </Button>
-          </Typography>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box
