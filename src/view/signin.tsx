@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Signin: React.FC = () => {
+  const API_URL: string = process.env.REACT_APP_API_URL!;
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -34,13 +35,10 @@ const Signin: React.FC = () => {
     setError("");
 
     try {
-      const res = await axios.post<{ token: string }>(
-        "http://localhost:4000/auth/login",
-        {
-          username,
-          password,
-        }
-      );
+      const res = await axios.post<{ token: string }>(`${API_URL}/auth/login`, {
+        username,
+        password,
+      });
       localStorage.setItem("token", res.data.token);
       if (res.status === 200) {
         localStorage.setItem("token", res.data.token);

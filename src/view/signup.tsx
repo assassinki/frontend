@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const SignUp: React.FC = () => {
+  const API_URL: string = process.env.REACT_APP_API_URL!;
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -53,7 +54,7 @@ const SignUp: React.FC = () => {
     }
     setError("");
     try {
-      const response = await axios.post("http://localhost:4000/auth/signup", {
+      const response = await axios.post(`${API_URL}/auth/signup`, {
         username,
         password,
         email,

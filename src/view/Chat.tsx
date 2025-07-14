@@ -32,7 +32,7 @@ interface ChatHistoryResponse {
 interface ChatReplyResponse {
   reply: string;
 }
-
+const API_URL: string = process.env.REACT_APP_API_URL!;
 const ChatDashboard: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
@@ -49,7 +49,7 @@ const ChatDashboard: React.FC = () => {
       setUsername(localStorage.getItem("username"));
 
       axios
-        .get<ChatHistoryResponse>("http://localhost:4000/auth/chat/history", {
+        .get<ChatHistoryResponse>(`${API_URL}/auth/chat/history`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -84,7 +84,7 @@ const ChatDashboard: React.FC = () => {
       const token = localStorage.getItem("token");
 
       const response = await axios.post<ChatReplyResponse>(
-        "http://localhost:4000/auth/chat",
+        `${API_URL}/auth/chat`,
         {
           role: "user",
           content: input,
